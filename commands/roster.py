@@ -73,8 +73,9 @@ async def roster(ctx, channel: discord.TextChannel, role: discord.Role):
     if not perms.administrator:
         await ctx.message.channel.send("**[ERROR]** You must be a server admin in order to create a roster")
         return
-    await sendEmbed("Welcome to iBot's Clan Roster Setup\nPlease type the header of the roster (top text)\n\
-                    **Example** My Clan Members", "", ctx)
+    await sendEmbed("Welcome to iBot's Clan Roster Setup\n\nPlease type the header of the roster (top text)\n\
+                        **Example** My Clan Members",
+                    "Note: Only use default font, support for different fonts will be added!", ctx)
 
     def check(m):
         return m.author == ctx.message.author and m.channel == ctx.message.channel
@@ -115,12 +116,52 @@ async def roster(ctx, channel: discord.TextChannel, role: discord.Role):
         for member in ctx.message.channel.guild.members:
             for mrole in member.roles:
                 if mrole.id == role.id:
-                    example_msg += '{0} **{1}**\n'.format(symbol.content, member.name)
+                    if member.nick is not None:
+                        example_msg += '{0} **{1}**\n'.format(symbol.content, member.nick)
+                    else:
+                        example_msg += '{0} **{1}**\n'.format(symbol.content, member.name)
+
         example_msg += "\n\n"
-        em = discord.Embed(title='', description=example_msg, colour=readableHex)
-        msg_id = await channel.send(embed=em)
-        added = await add_roster(ctx.message.channel.guild.id, channel.id, role.id, msg_id.id, msg.content, symbol.content,
-                                 color.content)
+        if len(example_msg) > 6000:
+            await sendError("Members list too long!\n\nSetup aborted!", "", ctx)
+            return
+
+        if len(example_msg) > 2000:
+
+            piece = example_msg[1900:2000]
+            em = discord.Embed(title='', description=example_msg[:1900 + piece.index("\n")], colour=readableHex)
+            msg_id = await channel.send(embed=em)
+
+            st_index = 1900 + piece.index("\n")
+            piece = example_msg[3900:4000]
+            en_index = 3900 + piece.index("\n")
+            em = discord.Embed(title='', description=example_msg[st_index:en_index], colour=readableHex)
+            msg_id1 = await channel.send(embed=em)
+
+            if len(example_msg) > 4000:
+
+                piece = example_msg[(len(example_msg) - 100):len(example_msg)]
+                st_index = en_index
+                en_index = (len(example_msg) - 100) + piece.index("\n")
+                em = discord.Embed(title='', description=example_msg[st_index:en_index], colour=readableHex)
+                msg_id2 = await channel.send(embed=em)
+
+                added = await add_roster(ctx.message.channel.guild.id, channel.id, role.id,
+                                         str(msg_id.id) + "," + str(msg_id1.id) + "," + str(msg_id2.id), msg.content,
+                                         symbol.content,
+                                         color.content)
+            else:
+                added = await add_roster(ctx.message.channel.guild.id, channel.id, role.id,
+                                         str(msg_id.id) + "," + str(msg_id1.id), msg.content,
+                                         symbol.content,
+                                         color.content)
+
+        else:
+            em = discord.Embed(title='', description=example_msg, colour=readableHex)
+            msg_id = await channel.send(embed=em)
+            added = await add_roster(ctx.message.channel.guild.id, channel.id, role.id, str(msg_id.id), msg.content,
+                                     symbol.content,
+                                     color.content)
         if added:
             await sendEmbed("Setup complete!\nUse `?rosters` to see the list of rosters", "", ctx)
         else:
@@ -130,10 +171,12 @@ async def roster(ctx, channel: discord.TextChannel, role: discord.Role):
         await ctx.message.channel.send("Setup aborted!")
 
 
-# errors"""
+"""
+# errors
 @roster.error
 async def roster_error(ctx, error):
     await sendError("**Usage** ?roster #channel @role\n**Example** ?roster #roster @clanmembers", "", ctx)
+"""
 
 
 @rosters.error

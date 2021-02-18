@@ -65,7 +65,7 @@ async def sendkeys(ctx):
                                 member.id) + "' AND tID = '" + str(tournament_info[0]) + "'")
                         con.commit()
                         count += 1
-                        await progress.edit(content="Sent keys to: {0}".format(count))
+                        await progress.edit(content="Sent keys to: {0} | Total keys send: {1}".format(member.name, count))
                     except:
                         await ctx.message.channel.send(
                             "I could not send the code to " + member.name + member.discriminator + ". Kindly ask them to change their dm settings and use `?sendkeys` again!")

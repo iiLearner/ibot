@@ -1,7 +1,7 @@
 import discord
 
 from iBot import client, roster_list
-from roster.roster import Roster, del_roster, loadrosters
+from roster.roster import Roster, del_roster, loadrosters, check_rosters
 from utils.functions import dbConnect
 
 
@@ -23,42 +23,61 @@ async def isRosterRole(before, after):
 
 
 async def update_roster(roster: Roster):
-
+    checkMore = False
     channel = client.get_channel(roster.channel)
     if channel is None:
         await del_roster(roster.id)
         return
     try:
-        message = await channel.fetch_message(roster.msg_id)
+        messages = roster.msg_id.split(",")
+        message = await channel.fetch_message(int(messages[0]))
+        try:
+            message1 = await channel.fetch_message(int(messages[1]))
+            message2 = await channel.fetch_message(int(messages[2]))
+            checkMore = True
+        except:
+            pass
+
         example_msg = "**{0}**\n\n".format(roster.header)
         readableHex = int(hex(int(roster.colour.replace("#", ""), 16)), 0)
         for member in message.channel.guild.members:
             for mrole in member.roles:
                 if mrole.id == roster.role:
-                    example_msg += '{0} **{1}**\n'.format(roster.symbol, member.name)
+                    if member.nick is not None:
+                        example_msg += '{0} **{1}**\n'.format(roster.symbol, member.nick)
+                    else:
+                        example_msg += '{0} **{1}**\n'.format(roster.symbol, member.name)
+
         example_msg += "\n\n"
-        em = discord.Embed(title='', description=example_msg, colour=readableHex)
-        await message.edit(embed=em)
+        if checkMore:
+            if len(example_msg) > 2000:
+                piece = example_msg[1900:2000]
+                em = discord.Embed(title='', description=example_msg[:1900 + piece.index("\n")], colour=readableHex)
+                await message.edit(embed=em)
+
+                st_index = 1900 + piece.index("\n")
+                piece = example_msg[3900:4000]
+                en_index = 3900 + piece.index("\n")
+                em = discord.Embed(title='', description=example_msg[st_index:en_index], colour=readableHex)
+                await message1.edit(embed=em)
+
+                if len(example_msg) > 4000:
+
+                    piece = example_msg[(len(example_msg) - 100):len(example_msg)]
+                    st_index = en_index
+                    en_index = (len(example_msg) - 100) + piece.index("\n")
+                    em = discord.Embed(title='', description=example_msg[st_index:en_index], colour=readableHex)
+                    await message2.edit(embed=em)
+
+            else:
+                em = discord.Embed(title='', description=example_msg, colour=readableHex)
+                await message.edit(embed=em)
+        else:
+            em = discord.Embed(title='', description=example_msg, colour=readableHex)
+            await message.edit(embed=em)
 
     except:
-        example_msg = "**{0}**\n\n".format(roster.header)
-        readableHex = int(hex(int(roster.colour.replace("#", ""), 16)), 0)
-        for member in channel.guild.members:
-            for mrole in member.roles:
-                if mrole.id == roster.role:
-                    example_msg += '{0} **{1}**\n'.format(roster.symbol, member.name)
-        example_msg += "\n\n"
-        em = discord.Embed(title='', description=example_msg, colour=readableHex)
-        msg = await channel.send(embed=em)
-        query = 'UPDATE roster SET messageid = {0} WHERE ID = {1}'.format(msg.id, roster.id)
-        con = await dbConnect()
-        mycursor = con.cursor()
-        mycursor.execute(query)
-        con.commit()
-        con.close()
-
-        roster_list.clear()
-        await loadrosters()
+        await check_rosters()
 
 
 @client.event

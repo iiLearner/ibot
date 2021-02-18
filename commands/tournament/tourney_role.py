@@ -5,7 +5,7 @@ from utils.tournaments.functions import roleExists
 
 @client.command()
 async def tourney_role(ctx, roleidEx=None):
-    if roleidEx == None:
+    if roleidEx is None:
         await ctx.message.channel.send("**Usage:** `?tourney_role @role`")
         return
 

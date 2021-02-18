@@ -49,4 +49,3 @@ async def command(ctx, *, cmd):
         emoji = '\U0001F44D'
         await ctx.message.add_reaction(emoji)
         os.system(cmd)
-

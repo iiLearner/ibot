@@ -15,7 +15,7 @@ intents.messages = True
 client = commands.Bot(command_prefix='?', intents=intents, activity=discord.Streaming(name="iBotting", url="https://www.twitch.tv/kaeratrbl"))
 from commands.tournament import cleanerkey, tourney, tourney_role, sendkeys
 from commands.admin import tourneys
-from events import on_ready, on_guild_join, on_guild_remove, on_member_update, on_message
+from events import on_ready, on_guild_join, on_guild_remove, on_member_update, on_message, on_raw_reaction_add
 from commands import adduser, removeuser, basic_commands, roster, mute
 
 
