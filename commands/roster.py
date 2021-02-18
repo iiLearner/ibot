@@ -73,31 +73,45 @@ async def roster(ctx, channel: discord.TextChannel, role: discord.Role):
     if not perms.administrator:
         await ctx.message.channel.send("**[ERROR]** You must be a server admin in order to create a roster")
         return
-    await sendEmbed("Welcome to iBot's Clan Roster Setup\n\nPlease type the header of the roster (top text)\n\
-                        **Example** My Clan Members",
+    await sendEmbed("Welcome to iBot's Clan Roster Setup\n\nPlease type the header of the roster (top text)\n**Example** My Clan Members",
                     "Note: Only use default font, support for different fonts will be added!", ctx)
 
     def check(m):
         return m.author == ctx.message.author and m.channel == ctx.message.channel
 
-    msg = await client.wait_for('message', check=check)
+    try:
+        msg = await client.wait_for('message', check=check)
+    except:
+        await sendError("Setup timed out! Please start over.", "", ctx)
+
     if len(msg.content) > 100:
-        await sendError("The header must be less than 200 characters!", "", ctx)
+        await sendError("The header must be less than 100 characters!", "", ctx)
         return
     await msg.add_reaction(tick_emoji)
 
     clan_emoji = client.get_emoji(702314132933836970)
     await sendEmbed("Please type the clan symbol/emoji: \n**Example** 頑 or {0}".format(clan_emoji), "", ctx)
-    symbol = await client.wait_for('message', timeout=60.0, check=check)
+    try:
+        symbol = await client.wait_for('message', timeout=60.0, check=check)
+    except:
+        await sendError("Setup timed out! Please start over.", "", ctx)
+
     if len(symbol.content) > 200:
         await sendError("The symbol must be less than 200 characters!", "", ctx)
         return
     await symbol.add_reaction(tick_emoji)
 
     await sendEmbed("Please type the roster colour RGB:\n**Example** 0x9b59b6", "", ctx)
-    color = await client.wait_for('message', timeout=60.0, check=check)
+    try:
+        color = await client.wait_for('message', timeout=60.0, check=check)
+    except:
+        await sendError("Setup timed out! Please start over.", "", ctx)
+
     await color.add_reaction(tick_emoji)
-    readableHex = int(hex(int(color.content.replace("#", ""), 16)), 0)
+    try:
+        readableHex = int(hex(int(color.content.replace("#", ""), 16)), 0)
+    except:
+        await sendError("Invalid colour code!\nAborting setup.", "", ctx)
 
     await ctx.message.channel.send("Example of how it will look like:")
     example_msg = '**{0}**\n\n{1} **{2}**'.format(msg.content, symbol.content, "iLearner")
@@ -110,7 +124,10 @@ async def roster(ctx, channel: discord.TextChannel, role: discord.Role):
     def check(reac, reacuser):
         return reacuser == ctx.message.author
 
-    reaction, user = await client.wait_for('reaction_add', timeout=60.0, check=check)
+    try:
+        reaction, user = await client.wait_for('reaction_add', timeout=60.0, check=check)
+    except:
+        await sendError("Setup timed out! Please start over.", "", ctx)
     if reaction.emoji == tick_emoji:
         example_msg = "**{0}**\n\n".format(msg.content)
         for member in ctx.message.channel.guild.members:
@@ -171,12 +188,12 @@ async def roster(ctx, channel: discord.TextChannel, role: discord.Role):
         await ctx.message.channel.send("Setup aborted!")
 
 
-"""
+
 # errors
 @roster.error
 async def roster_error(ctx, error):
     await sendError("**Usage** ?roster #channel @role\n**Example** ?roster #roster @clanmembers", "", ctx)
-"""
+
 
 
 @rosters.error
