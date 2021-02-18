@@ -1,4 +1,5 @@
 import discord
+from discord.ext import commands
 
 from iBot import client
 from roster.roster import add_roster, rosterlist, del_roster
@@ -73,8 +74,9 @@ async def roster(ctx, channel: discord.TextChannel, role: discord.Role):
     if not perms.administrator:
         await ctx.message.channel.send("**[ERROR]** You must be a server admin in order to create a roster")
         return
-    await sendEmbed("Welcome to iBot's Clan Roster Setup\n\nPlease type the header of the roster (top text)\n**Example** My Clan Members",
-                    "Note: Only use default font, support for different fonts will be added!", ctx)
+    await sendEmbed(
+        "Welcome to iBot's Clan Roster Setup\n\nPlease type the header of the roster (top text)\n**Example** My Clan Members",
+        "Note: Only use default font, support for different fonts will be added!", ctx)
 
     def check(m):
         return m.author == ctx.message.author and m.channel == ctx.message.channel
@@ -188,12 +190,13 @@ async def roster(ctx, channel: discord.TextChannel, role: discord.Role):
         await ctx.message.channel.send("Setup aborted!")
 
 
-
 # errors
 @roster.error
 async def roster_error(ctx, error):
-    await sendError("**Usage** ?roster #channel @role\n**Example** ?roster #roster @clanmembers", "", ctx)
-
+    if isinstance(error, commands.MissingRequiredArgument) or isinstance(error, commands.BadArgument):
+        await sendError("**Usage** ?roster #channel @role\n**Example** ?roster #roster @clanmembers", "Make sure you mentione a channel and a role!", ctx)
+    else:
+        await sendError("Something wrong wrong...", "", ctx)
 
 
 @rosters.error
@@ -203,4 +206,4 @@ async def rosters_error(ctx, error):
 
 @droster.error
 async def droster_error(ctx, error):
-    await sendError("**Usage** ?droster ID\n**Example** ?droster 1", "", ctx)
+    await sendError("**Usage** ?droster ID\n**Example** ?droster 1", "Provide the roster ID (`?rosters` to see IDs)", ctx)
