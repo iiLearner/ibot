@@ -10,6 +10,8 @@ from utils.functions import dbConnect
 async def tlist(ctx):
     if ctx.message.author.id != ownerID:
         await ctx.message.channel.send("no")
+        return
+
     con = await dbConnect()
     iBot.mycursor = con.cursor()
 
