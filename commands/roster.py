@@ -114,6 +114,7 @@ async def roster(ctx, channel: discord.TextChannel, role: discord.Role):
         readableHex = int(hex(int(color.content.replace("#", ""), 16)), 0)
     except:
         await sendError("Invalid colour code!\nAborting setup.", "", ctx)
+        return
 
     await ctx.message.channel.send("Example of how it will look like:")
     example_msg = '**{0}**\n\n{1} **{2}**'.format(msg.content, symbol.content, "iLearner")
