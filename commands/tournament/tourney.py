@@ -13,11 +13,10 @@ async def cancel_tourney(ctx):
         await ctx.message.channel.send("**[ERROR]** You don't have a tourney! Create one with `?create_tourney`!")
         return
     else:
-        logs_channel = client.get_channel(int(result[4]))
-        alerts_channel = client.get_channel(int(result[5]))
-        category_channel = logs_channel.category
-
         try:
+            logs_channel = client.get_channel(int(result[4]))
+            alerts_channel = client.get_channel(int(result[5]))
+            category_channel = logs_channel.category
             await logs_channel.delete()
             await alerts_channel.delete()
             await category_channel.delete()
