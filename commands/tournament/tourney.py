@@ -17,9 +17,12 @@ async def cancel_tourney(ctx):
         alerts_channel = client.get_channel(int(result[5]))
         category_channel = logs_channel.category
 
-        await logs_channel.delete()
-        await alerts_channel.delete()
-        await category_channel.delete()
+        try:
+            await logs_channel.delete()
+            await alerts_channel.delete()
+            await category_channel.delete()
+        except:
+            await ctx.message.channel.send("**[Warning]** I was unable to delete the anticheat channels! (missing permissions or channels?)")
 
         mycursor.execute("UPDATE tournaments SET status = 0 WHERE userid = " + str(ctx.message.author.id) + "")
         con.commit()
