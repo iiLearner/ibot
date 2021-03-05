@@ -41,4 +41,4 @@ async def droster(ctx, roster_id: int):
 
 @droster.error
 async def droster_error(ctx, error):
-    await sendError("**Usage** ?droster ID\n**Example** ?droster 1", "Provide the roster ID (`?rosters` to see IDs)", ctx)
+    await sendError("**Usage** ?droster ID\n**Example** ?droster 1\n\nDelete a roster from your server", "Provide the roster ID (`?rosters` to see IDs)", ctx)

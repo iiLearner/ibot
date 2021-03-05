@@ -138,7 +138,7 @@ async def roster(ctx, channel: discord.TextChannel, role: discord.Role):
 @roster.error
 async def roster_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument) or isinstance(error, commands.BadArgument):
-        await sendError("**Usage** ?roster #channel @role\n**Example** ?roster #roster @clanmembers", "Make sure you mentione a channel and a role!", ctx)
+        await sendError("**Usage** ?roster #channel @role\n**Example** ?roster #roster @clanmembers\n\nCreate a roster in your server", "Make sure you mentione a channel and a role!", ctx)
     elif isinstance(error, asyncio.TimeoutError):
         await sendError("Setup timedout!", "", ctx)
     else:

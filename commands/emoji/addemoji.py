@@ -42,4 +42,4 @@ async def adduser_error(ctx, error):
             "", ctx)
 
     elif isinstance(error, commands.BadArgument) or isinstance(error, commands.MissingRequiredArgument):
-        await sendError("**Usage:** ?iaddemoji `@user` `emoji`", "", ctx)
+        await sendError("**Usage:** ?iaddemoji `@user\n\nAdd a reaction emoji to a user` `emoji`", "", ctx)

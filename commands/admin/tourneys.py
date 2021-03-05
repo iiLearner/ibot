@@ -30,7 +30,7 @@ async def tlist(ctx):
             continue
 
     if len(result) == 0:
-        msg = "No tournaments available for this server\n"
+        msg = "No tournaments available\n"
 
     em = discord.Embed(title='', description=msg, colour=0xe67e22)
     em.set_footer(text="", icon_url=ctx.message.channel.guild.icon_url)

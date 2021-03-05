@@ -29,6 +29,6 @@ async def mute(ctx, member: discord.Member):
 
 @mute.error
 async def mute_error(ctx, error):
-    await sendError("**Usage** ?imute @member\n**Example** ?imute @ibot", "", ctx)
+    await sendError("**Usage** ?imute @member\n**Example** ?imute @ibot\n\nSoft mute a user. Soft muting a user will result in user messaging being immediately deleted!", "", ctx)
 
 

@@ -33,4 +33,4 @@ async def delemoji_error(ctx, error):
             f"Failed to add emoji! Make sure the emoji belongs to this server or a server where the bot is present!",
             "", ctx)
     elif isinstance(error, commands.BadArgument) or isinstance(error, commands.MissingRequiredArgument) or isinstance(error, commands.MemberNotFound):
-        await sendError("**Usage:** ?idelemoji `@user`", "", ctx)
+        await sendError("**Usage:** ?idelemoji `@user\n\nDelete a reaction emoji from a user.`", "", ctx)

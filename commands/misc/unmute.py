@@ -24,4 +24,4 @@ async def unmute(ctx, member: discord.Member):
 
 @unmute.error
 async def unmute_error(ctx, error):
-    await sendError("**Usage** ?iunmute @member\n**Example** ?iunmute @ibot", "", ctx)
+    await sendError("**Usage** ?iunmute @member\n**Example** ?iunmute @ibot\n\nSoft unmute a user.", "", ctx)
