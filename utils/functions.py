@@ -17,7 +17,8 @@ async def sendEmbed(message: str, footer: str, ctx):
 async def sendError(message: str, footer: str, ctx):
     em = discord.Embed(title='', description=message, colour=0xe74c3c)
     em.set_footer(text=footer, icon_url=client.user.avatar_url)
-    await ctx.message.channel.send(embed=em)
+    message = await ctx.message.channel.send(embed=em)
+    return message
 
 
 async def dbConnect():

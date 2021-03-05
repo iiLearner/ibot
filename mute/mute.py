@@ -14,7 +14,7 @@ async def addMute(user: int, server: int, flag):
     muted_list.append(Mute(user, server, flag))
 
 
-async def delMute(user: int):
+async def delMute(user: int, server: int):
     for x in muted_list:
-        if x.user == user:
+        if x.user == user and x.server == server:
             muted_list.remove(x)

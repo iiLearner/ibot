@@ -3,7 +3,7 @@ from iBot import client
 from utils.functions import dbConnect
 
 
-@client.command()
+@client.command(aliases=["close_tourney"])
 async def cancel_tourney(ctx):
     con = await dbConnect()
     mycursor = con.cursor()
