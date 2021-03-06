@@ -42,7 +42,7 @@ async def getWelcomeChannel(guild):
     return guild.channels[0]
 
 
-async def sendWelcomeMessage(channel):
+async def sendHelpMessage(channel):
 
     message = "Here is the list of commands!\nFor more info on a command, use `{command}` to view usage help.\nFor further assistance join our [guild](https://discord.gg/79kbdEDwnV)\n\n"
     em = discord.Embed(title='', description=message, colour=0xe67e22)

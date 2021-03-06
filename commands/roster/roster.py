@@ -58,7 +58,7 @@ async def roster(ctx, channel: discord.TextChannel, role: discord.Role):
     try:
         readableHex = await ColourConverter().convert(ctx, color.content)
     except:
-        await sendError("Invalid colour code!\nAborting setup.", "", ctx)
+        await sendError("Invalid colour code!\nAborting setup.\n\nMake sure it's a valid colour code! Get one from [here](https://www.color-hex.com/)", "", ctx)
         return
 
     await ctx.message.channel.send("Example of how it will look like:")

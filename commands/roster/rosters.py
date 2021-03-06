@@ -27,7 +27,7 @@ async def rosters(ctx, ):
         msg = "No rosters available for this server\nUse `iroster` to create one!"
 
     em = discord.Embed(title='', description=msg, colour=0xe67e22)
-    em.set_footer(text="To delete a roster use: ?iroster `ID`", icon_url=ctx.message.channel.guild.icon_url)
+    em.set_footer(text="To delete a roster use: iroster `ID`", icon_url=ctx.message.channel.guild.icon_url)
     await ctx.message.channel.send(embed=em)
 
 

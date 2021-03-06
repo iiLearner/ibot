@@ -1,6 +1,6 @@
 from main.config import ownerID
 from iBot import client
-from utils.functions import getWelcomeChannel, sendWelcomeMessage
+from utils.functions import getWelcomeChannel, sendHelpMessage
 
 
 @client.event
@@ -10,6 +10,6 @@ async def on_guild_join(guild):
 
     channel = await getWelcomeChannel(guild)
     try:
-        await sendWelcomeMessage(channel)
+        await sendHelpMessage(channel)
     except:
         pass
