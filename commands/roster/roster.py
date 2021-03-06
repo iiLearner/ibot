@@ -2,6 +2,7 @@ import asyncio
 
 import discord
 from discord.ext import commands
+from discord.ext.commands import ColourConverter
 
 from iBot import client
 from roster.roster import add_roster
@@ -9,6 +10,7 @@ from utils.functions import sendEmbed, sendError
 
 
 @client.command()
+@commands.cooldown(1, 20, commands.BucketType.user)
 async def roster(ctx, channel: discord.TextChannel, role: discord.Role):
     perms = ctx.message.author.guild_permissions
     tick_emoji = client.get_emoji(806114376297611266)
@@ -34,8 +36,8 @@ async def roster(ctx, channel: discord.TextChannel, role: discord.Role):
         return
     await msg.add_reaction(tick_emoji)
 
-    clan_emoji = client.get_emoji(702314132933836970)
-    await sendEmbed("Please type the clan symbol/emoji: \n**Example** 頑 or {0}".format(clan_emoji), "", ctx)
+    clan_emoji = client.get_emoji(812578319308161045)
+    await sendEmbed("Please type the clan symbol/emoji: \n**Example** ♅ or {0}".format(clan_emoji), "", ctx)
     try:
         symbol = await client.wait_for('message', timeout=60.0, check=check)
     except:
@@ -46,7 +48,7 @@ async def roster(ctx, channel: discord.TextChannel, role: discord.Role):
         return
     await symbol.add_reaction(tick_emoji)
 
-    await sendEmbed("Please type the roster colour RGB:\n**Example** 0x9b59b6", "", ctx)
+    await sendEmbed("Please type the roster colour RGB:\n**Example** 9b59b6", "", ctx)
     try:
         color = await client.wait_for('message', timeout=60.0, check=check)
     except:
@@ -54,7 +56,7 @@ async def roster(ctx, channel: discord.TextChannel, role: discord.Role):
 
     await color.add_reaction(tick_emoji)
     try:
-        readableHex = int(hex(int(color.content.replace("#", ""), 16)), 0)
+        readableHex = await ColourConverter.convert(ctx, color)
     except:
         await sendError("Invalid colour code!\nAborting setup.", "", ctx)
         return
@@ -126,7 +128,7 @@ async def roster(ctx, channel: discord.TextChannel, role: discord.Role):
                                      symbol.content,
                                      color.content)
         if added:
-            await sendEmbed("Setup complete!\nUse `?rosters` to see the list of rosters", "", ctx)
+            await sendEmbed("Setup complete!\nUse `irosters` to see the list of rosters", "", ctx)
         else:
             await sendError("Something went wrong...", "", ctx)
             await msg_id.delete()
@@ -138,7 +140,7 @@ async def roster(ctx, channel: discord.TextChannel, role: discord.Role):
 @roster.error
 async def roster_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument) or isinstance(error, commands.BadArgument):
-        await sendError("**Usage** ?roster #channel @role\n**Example** ?roster #roster @clanmembers\n\nCreate a roster in your server", "Make sure you mentione a channel and a role!", ctx)
+        await sendError("**Usage** iroster `#channel` `@role`\n**Example** iroster `#roster` `@myrole`\n\n`Create a roster in your server`", "Make sure you mentione a channel and a role!", ctx)
     elif isinstance(error, asyncio.TimeoutError):
         await sendError("Setup timedout!", "", ctx)
     else:

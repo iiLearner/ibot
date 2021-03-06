@@ -1,11 +1,14 @@
 import uuid
 import discord
+from discord.ext import commands
+
 from iBot import client
 from utils.functions import dbConnect
 from utils.tournaments.functions import codeSent
 
 
 @client.command()
+@commands.cooldown(1, 30, commands.BucketType.user)
 async def sendkeys(ctx):
     me = ctx.message.channel.guild.me
 

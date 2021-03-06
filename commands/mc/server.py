@@ -40,6 +40,6 @@ async def server(ctx, ip: str, port=None):
 @server.error
 async def server_error(ctx, error):
     if isinstance(error, commands.BadArgument) or isinstance(error, commands.MissingRequiredArgument):
-        await sendError("***Usage:*** iserver ip port(optional)\n\nQuery a minecraft server by `ip` and `port`", "", ctx)
+        await sendError("***Usage:*** iserver `ip` `port` (optional)\n\n`Query a minecraft server by ip and port`", "", ctx)
     else:
         await sendError("Failed to query server!\n\nMake sure the server has query enabled!\n", "", ctx)

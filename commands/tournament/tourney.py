@@ -1,9 +1,12 @@
 import discord
+from discord.ext import commands
+
 from iBot import client
 from utils.functions import dbConnect
 
 
 @client.command(aliases=["close_tourney"])
+@commands.cooldown(1, 30, commands.BucketType.user)
 async def cancel_tourney(ctx):
     con = await dbConnect()
     mycursor = con.cursor()
@@ -31,9 +34,10 @@ async def cancel_tourney(ctx):
 
 
 @client.command()
+@commands.cooldown(1, 30, commands.BucketType.user)
 async def create_tourney(ctx, *, name=None):
     if name is None:
-        await ctx.message.channel.send("**Usage:** ?create_tourney <name>")
+        await ctx.message.channel.send("**Usage:** ?create_tourney `<name>`")
         return
 
     perms = ctx.message.author.guild_permissions

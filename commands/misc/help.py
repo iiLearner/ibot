@@ -1,8 +1,11 @@
 import discord
+from discord.ext import commands
+
 from iBot import client
 
 
 @client.command()
+@commands.cooldown(1, 30, commands.BucketType.user)
 async def help(ctx):
 
     message = "Here is the list of commands!\nFor more info on a command, use `{command}` to view usage help.\nFor further assistance join our [guild](https://discord.gg/79kbdEDwnV)\n\n"

@@ -2,6 +2,7 @@ import discord
 import mysql.connector
 import os
 from iBot import client
+import asyncio
 
 
 def is_bot(m):
@@ -19,6 +20,51 @@ async def sendError(message: str, footer: str, ctx):
     em.set_footer(text=footer, icon_url=client.user.avatar_url)
     message = await ctx.message.channel.send(embed=em)
     return message
+
+
+async def sendCooldown(time: str, ctx):
+    emoji = '\U0001f55b'
+    em = discord.Embed(title='', description=f"{emoji} Please wait {round(time, 2)}s and try again!", colour=0xe67e22)
+    em.set_author(name="Cooldown!", icon_url=ctx.message.author.avatar_url)
+    message = await ctx.message.channel.send(embed=em)
+    await asyncio.sleep(int(time))
+    await message.delete()
+
+
+async def getWelcomeChannel(guild):
+    for channel in guild.channels:
+        if channel.name is "general":
+            return channel
+
+    if guild.system_channel is not None:
+        return guild.system_channel
+
+    return guild.channels[0]
+
+
+async def sendWelcomeMessage(channel):
+
+    message = "Here is the list of commands!\nFor more info on a command, use `{command}` to view usage help.\nFor further assistance join our [guild](https://discord.gg/79kbdEDwnV)\n\n"
+    em = discord.Embed(title='', description=message, colour=0xe67e22)
+    em.set_author(name="Command help", icon_url=channel.guild.icon_url)
+
+    emoji = client.get_emoji(788351325531537428)
+    em.add_field(name=f"{emoji} Emoji", value="`addemoji` `delemoji`", inline=False)
+
+    emoji = client.get_emoji(777915907644850227)
+    em.add_field(name=f"{emoji} Roster", value="`roster` `droster` `rosters`", inline=False)
+
+    emoji = client.get_emoji(817499208189345882)
+    em.add_field(name=f"{emoji} Tournament", value="`create_tourney` `cancel_tourney` `tourney_role` `sendkeys` `close_tourney`", inline=False)
+
+    emoji = client.get_emoji(565838171363868682)
+    em.add_field(name=f"{emoji} Special Mute", value="`mute` `unmute`", inline=False)
+
+    emoji = client.get_emoji(817523844004053044)
+    em.add_field(name=f"{emoji} Minecraft", value="`server`", inline=False)
+
+    em.set_footer(text="You must use `i` prefix before the commands!", icon_url=client.user.avatar_url)
+    await channel.send(embed=em)
 
 
 async def dbConnect():

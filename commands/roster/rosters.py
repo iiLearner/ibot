@@ -1,10 +1,13 @@
 import discord
+from discord.ext import commands
+
 from iBot import client
 from roster.roster import rosterlist
 from utils.functions import sendError
 
 
 @client.command()
+@commands.cooldown(1, 10, commands.BucketType.user)
 async def rosters(ctx, ):
     perms = ctx.message.author.guild_permissions
     if not perms.administrator:
@@ -21,10 +24,10 @@ async def rosters(ctx, ):
                                                                                                chan.mention,
                                                                                                role.mention)
     if len(lost_roster_list) == 0:
-        msg = "No rosters available for this server\nUse `?roster` to create one!"
+        msg = "No rosters available for this server\nUse `iroster` to create one!"
 
     em = discord.Embed(title='', description=msg, colour=0xe67e22)
-    em.set_footer(text="To delete a roster use: ?droster ID", icon_url=ctx.message.channel.guild.icon_url)
+    em.set_footer(text="To delete a roster use: ?iroster `ID`", icon_url=ctx.message.channel.guild.icon_url)
     await ctx.message.channel.send(embed=em)
 
 

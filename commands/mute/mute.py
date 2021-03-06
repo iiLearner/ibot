@@ -1,4 +1,6 @@
 import discord
+from discord.ext import commands
+
 from iBot import client
 from main.config import ownerID
 from mute.mute import addMute
@@ -6,6 +8,7 @@ from utils.functions import sendError, sendEmbed
 
 
 @client.command()
+@commands.cooldown(1, 10, commands.BucketType.user)
 async def mute(ctx, member: discord.Member):
     perms = ctx.message.author.guild_permissions
     if ctx.message.author.id != ownerID and not perms.manage_messages:
@@ -22,13 +25,13 @@ async def mute(ctx, member: discord.Member):
     try:
         emoji = '\U0001F44D'
         await ctx.message.add_reaction(emoji)
-        await sendEmbed(f"{member.mention} has successfully been soft muted!", "use `?iunmute @member` to unmute", ctx)
+        await sendEmbed(f"{member.mention} has successfully been soft muted!", "use `iunmute @member` to unmute", ctx)
     except:
         await sendError("An error occurred!")
 
 
 @mute.error
 async def mute_error(ctx, error):
-    await sendError("**Usage** ?imute @member\n**Example** ?imute @ibot\n\nSoft mute a user. Soft muting a user will result in user messaging being immediately deleted!", "", ctx)
+    await sendError("**Usage** imute `@member`\n**Example** imute `@ibot`\n\n`Soft mute a user. Soft muting a user will result in user messaging being immediately deleted!`", "", ctx)
 
 

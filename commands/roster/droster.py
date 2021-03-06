@@ -1,10 +1,13 @@
 import discord
+from discord.ext import commands
+
 from iBot import client
 from roster.roster import rosterlist, del_roster
 from utils.functions import sendEmbed, sendError
 
 
 @client.command()
+@commands.cooldown(1, 10, commands.BucketType.user)
 async def droster(ctx, roster_id: int):
     perms = ctx.message.author.guild_permissions
     if not perms.administrator:
@@ -27,10 +30,10 @@ async def droster(ctx, roster_id: int):
                                                                                                            chan.mention,
                                                                                                            role.mention)
                 if len(lost_roster_list) == 0:
-                    msg = "No rosters available for this server\nUse `?roster` to create one!"
+                    msg = "No rosters available for this server\nUse `iroster` to create one!"
 
                 em = discord.Embed(title='', description=msg, colour=0xe67e22)
-                em.set_footer(text="To delete a roster use: ?droster ID", icon_url=ctx.message.channel.guild.icon_url)
+                em.set_footer(text="To delete a roster use: idroster ID", icon_url=ctx.message.channel.guild.icon_url)
                 await ctx.message.channel.send(embed=em)
             else:
                 await sendError("Something went wrong..", "", ctx)
@@ -41,4 +44,4 @@ async def droster(ctx, roster_id: int):
 
 @droster.error
 async def droster_error(ctx, error):
-    await sendError("**Usage** ?droster ID\n**Example** ?droster 1\n\nDelete a roster from your server", "Provide the roster ID (`?rosters` to see IDs)", ctx)
+    await sendError("**Usage** idroster `ID`\n**Example** idroster `1`\n\n`Delete a roster from your server`", "Provide the roster ID (`irosters` to see IDs)", ctx)

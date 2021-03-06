@@ -8,6 +8,7 @@ from utils.functions import sendError, sendEmbed
 
 
 @client.command()
+@commands.cooldown(1, 30, commands.BucketType.user)
 async def addemoji(ctx, member: discord.Member, emoji: discord.Emoji):
 
     perms = ctx.message.author.guild_permissions
@@ -31,7 +32,7 @@ async def addemoji(ctx, member: discord.Member, emoji: discord.Emoji):
 
 
 @addemoji.error
-async def adduser_error(ctx, error):
+async def addemoji_error(ctx, error):
     if isinstance(error, commands.EmojiNotFound):
         await sendError(
             f"Failed to add emoji! Make sure the emoji belongs to this server or a server where the bot is present!",
@@ -42,4 +43,4 @@ async def adduser_error(ctx, error):
             "", ctx)
 
     elif isinstance(error, commands.BadArgument) or isinstance(error, commands.MissingRequiredArgument):
-        await sendError("**Usage:** ?iaddemoji `@user\n\nAdd a reaction emoji to a user` `emoji`", "", ctx)
+        await sendError("**Usage:** iaddemoji `@user` `emoji`\n\n`Add a reaction emoji to a user`", "", ctx)

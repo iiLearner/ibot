@@ -1,12 +1,15 @@
+from discord.ext import commands
+
 from iBot import client
 from utils.functions import dbConnect
 from utils.tournaments.functions import roleExists
 
 
 @client.command()
+@commands.cooldown(1, 30, commands.BucketType.user)
 async def tourney_role(ctx, roleidEx=None):
     if roleidEx is None:
-        await ctx.message.channel.send("**Usage:** `?tourney_role @role`")
+        await ctx.message.channel.send("**Usage:** ?tourney_role `@role`")
         return
 
     check = roleidEx.isnumeric()

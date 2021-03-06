@@ -7,6 +7,7 @@ from utils.functions import sendEmbed, sendError
 
 
 @client.command()
+@commands.cooldown(1, 30, commands.BucketType.user)
 async def delemoji(ctx, member: discord.Member, emoji=None):
     perms = ctx.message.author.guild_permissions
     if ctx.message.author.id != ownerID and not perms.administrator:
@@ -33,4 +34,4 @@ async def delemoji_error(ctx, error):
             f"Failed to add emoji! Make sure the emoji belongs to this server or a server where the bot is present!",
             "", ctx)
     elif isinstance(error, commands.BadArgument) or isinstance(error, commands.MissingRequiredArgument) or isinstance(error, commands.MemberNotFound):
-        await sendError("**Usage:** ?idelemoji `@user\n\nDelete a reaction emoji from a user.`", "", ctx)
+        await sendError("**Usage:** idelemoji `@user`\n\n`Delete a reaction emoji from a user.`", "", ctx)

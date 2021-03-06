@@ -1,11 +1,13 @@
 import uuid
 import discord
+from discord.ext import commands
 
 from iBot import client
 from utils.functions import dbConnect
 
 
 @client.command()
+@commands.cooldown(1, 30, commands.BucketType.user)
 async def cleanerkey(ctx, userid: int):
     if ctx.message.author.id != 266947686194741248:
         await ctx.message.channel.send("no")
