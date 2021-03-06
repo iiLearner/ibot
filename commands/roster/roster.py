@@ -48,7 +48,7 @@ async def roster(ctx, channel: discord.TextChannel, role: discord.Role):
         return
     await symbol.add_reaction(tick_emoji)
 
-    await sendEmbed("Please type the roster colour RGB:\n**Example** 9b59b6", "", ctx)
+    await sendEmbed("Please type the roster colour RGB:\n**Example** #FF0000", "", ctx)
     try:
         color = await client.wait_for('message', timeout=60.0, check=check)
     except:
@@ -56,7 +56,7 @@ async def roster(ctx, channel: discord.TextChannel, role: discord.Role):
 
     await color.add_reaction(tick_emoji)
     try:
-        readableHex = await ColourConverter.convert(ctx, color)
+        readableHex = await ColourConverter().convert(ctx, color.content)
     except:
         await sendError("Invalid colour code!\nAborting setup.", "", ctx)
         return

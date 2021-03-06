@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 
 from iBot import client
+from utils.functions import sendCooldown
 
 
 @client.command()
@@ -29,3 +30,9 @@ async def help(ctx):
 
     em.set_footer(text="You must use `i` prefix before the commands!", icon_url=client.user.avatar_url)
     await ctx.message.channel.send(embed=em)
+
+
+@help.error
+async def help_error(ctx, error):
+    if isinstance(error, commands.CommandOnCooldown):
+        await sendCooldown(error.retry_after, ctx)
