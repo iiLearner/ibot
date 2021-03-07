@@ -55,7 +55,7 @@ async def sendHelpMessage(channel):
     em.add_field(name=f"{emoji} Roster", value="`roster` `droster` `rosters`", inline=False)
 
     emoji = client.get_emoji(817499208189345882)
-    em.add_field(name=f"{emoji} Tournament", value="`create_tourney` `cancel_tourney` `tourney_role` `sendkeys` `close_tourney`", inline=False)
+    em.add_field(name=f"{emoji} Tournament", value="`create_tourney` `cancel_tourney` `tourney_role` `close_tourney` `sendkeys`", inline=False)
 
     emoji = client.get_emoji(565838171363868682)
     em.add_field(name=f"{emoji} Special Mute", value="`mute` `unmute`", inline=False)

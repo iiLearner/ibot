@@ -3,7 +3,7 @@ from discord.ext import commands
 
 from iBot import client
 from main.config import ownerID
-from mute.mute import addMute
+from mute.mute import addMute, isMuted
 from utils.functions import sendError, sendEmbed
 
 
@@ -20,8 +20,15 @@ async def mute(ctx, member: discord.Member):
         await sendError("I need manage message permission in order to do this!", "", ctx)
         return
 
-    await addMute(member.id, ctx.message.channel.guild.id, 0)
+    if await isMuted(member.id, ctx.message.channel.guild.id):
+        await sendError("Member is already muted!", "", ctx)
+        return
 
+    if member.bot:
+        await sendError("You cannot mute a bot!", "", ctx)
+        return
+
+    await addMute(member.id, ctx.message.channel.guild.id, 0)
     try:
         emoji = '\U0001F44D'
         await ctx.message.add_reaction(emoji)
@@ -32,6 +39,6 @@ async def mute(ctx, member: discord.Member):
 
 @mute.error
 async def mute_error(ctx, error):
-    await sendError("**Usage** imute `@member`\n**Example** imute `@ibot`\n\n`Soft mute a user. Soft muting a user will result in user messaging being immediately deleted!`", "", ctx)
+    await sendError("**Usage** imute `@member`\n**Example** imute `@ibot`\n\n`Soft mute a user. Soft muting a user will result in user messages being immediately deleted!`", "", ctx)
 
 

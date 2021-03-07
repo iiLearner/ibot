@@ -76,6 +76,7 @@ async def roster(ctx, channel: discord.TextChannel, role: discord.Role):
         reaction, user = await client.wait_for('reaction_add', timeout=60.0, check=check)
     except:
         await sendError("Setup timed out! Please start over.", "", ctx)
+
     if reaction.emoji == tick_emoji:
         example_msg = "**{0}**\n\n".format(msg.content)
         for member in ctx.message.channel.guild.members:
