@@ -16,6 +16,7 @@ async def rosters(ctx, ):
 
     lost_roster_list = await rosterlist(ctx.message.channel.guild.id)
 
+    await ctx.trigger_typing()
     msg = ""
     for x in lost_roster_list:
         chan = client.get_channel(x.channel)

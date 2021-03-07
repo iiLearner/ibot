@@ -15,6 +15,7 @@ async def droster(ctx, roster_id: int):
         return
 
     lost_roster_list = await rosterlist(ctx.message.channel.guild.id)
+    await ctx.trigger_typing()
     for r in lost_roster_list:
         if r.id == roster_id:
             deleted = await del_roster(roster_id)

@@ -28,6 +28,7 @@ async def mute(ctx, member: discord.Member):
         await sendError("You cannot mute a bot!", "", ctx)
         return
 
+    await ctx.trigger_typing()
     await addMute(member.id, ctx.message.channel.guild.id, 0)
     try:
         emoji = '\U0001F44D'

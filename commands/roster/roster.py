@@ -15,7 +15,7 @@ async def roster(ctx, channel: discord.TextChannel, role: discord.Role):
     perms = ctx.message.author.guild_permissions
     tick_emoji = client.get_emoji(806114376297611266)
     redtick_emoji = client.get_emoji(806117763784638464)
-
+    await ctx.trigger_typing()
     if not perms.administrator:
         await ctx.message.channel.send("**[ERROR]** You must be a server admin in order to create a roster")
         return

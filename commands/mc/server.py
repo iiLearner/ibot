@@ -12,7 +12,7 @@ from utils.functions import sendError
 async def server(ctx, ip: str, port=None):
     if port is None:
         port = "25565"
-
+    await ctx.trigger_typing()
     server = MinecraftServer.lookup(f"{ip}:{port}")
     status = server.status()
     query = server.query()

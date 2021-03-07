@@ -20,6 +20,7 @@ async def unmute(ctx, member: discord.Member):
         await sendError("Member is not muted!", "", ctx)
         return
 
+    await ctx.trigger_typing()
     await delMute(member.id, ctx.message.channel.guild.id)
     try:
         emoji = '\U0001F44D'

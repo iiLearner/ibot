@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 
 from iBot import client
-from utils.functions import dbConnect
+from utils.functions import dbConnect, sendError
 
 
 @client.command(aliases=["close_tourney"])
@@ -56,21 +56,19 @@ async def create_tourney(ctx, *, name=None):
         return
 
     await ctx.trigger_typing()
-    me = ctx.message.channel.guild.me
-    permissions = me.guild_permissions
-    if permissions.manage_channels:
-        pass
-    else:
-        await ctx.message.channel.send("**Error!** I do not have permissions to create channels!")
+    myperms = ctx.message.channel.guild.me.guild_permissions
+    if not myperms.manage_messages:
+        await sendError("I need manage channel permission in order to do this!", "", ctx)
+        return
 
-    category = await me.guild.create_category("AntiCheat")
+    category = await ctx.message.channel.guild.me.guild.create_category(name)
     overwrites = {
-        me.guild.default_role: discord.PermissionOverwrite(read_messages=False),
-        me: discord.PermissionOverwrite(read_messages=True, send_messages=True),
+        ctx.message.channel.guild.me.guild.default_role: discord.PermissionOverwrite(read_messages=False),
+        ctx.message.channel.guild.me: discord.PermissionOverwrite(read_messages=True, send_messages=True),
         ctx.message.author: discord.PermissionOverwrite(read_messages=True, send_messages=True)
     }
-    logs = await me.guild.create_text_channel("┌📈𝗟𝗢𝗚𝗦", overwrites=overwrites, category=category)
-    alerts = await me.guild.create_text_channel("└👥𝗔𝗟𝗘𝗥𝗧𝗦", overwrites=overwrites, category=category)
+    logs = await ctx.message.channel.guild.me.guild.create_text_channel("┌📈𝗟𝗢𝗚𝗦", overwrites=overwrites, category=category)
+    alerts = await ctx.message.channel.guild.me.guild.create_text_channel("└👥𝗔𝗟𝗘𝗥𝗧𝗦", overwrites=overwrites, category=category)
 
     av_commands = "Here's the list of available commands that can be used in {0} or {1} by organizers!\n`closeconnection name` - Close the connection for a" \
                   "user.\n**Example:** `closeconnection iLearner`\n\n`processlist name` - Get the current list of running processes from task manager for a " \
@@ -78,7 +76,7 @@ async def create_tourney(ctx, *, name=None):
                                                                                                   alerts.mention)
     em = discord.Embed(title='Available commands', description=av_commands, colour=0x2ecc71)
     em.set_author(name='', icon_url=ctx.message.author.avatar_url)
-    em.set_footer(text=name, icon_url=me.avatar_url)
+    em.set_footer(text=name, icon_url=ctx.message.channel.guild.me.avatar_url)
     await logs.send(embed=em)
     await alerts.send(embed=em)
 
@@ -88,11 +86,11 @@ async def create_tourney(ctx, *, name=None):
         myemoji, myemoji, name, ctx.message.author.mention, logs.mention, alerts.mention, chemoji, chemoji)
     em = discord.Embed(title='', description=msg, colour=0x9b59b6)
     em.set_author(name='', icon_url=ctx.message.author.avatar_url)
-    em.set_footer(text="Tournament created!", icon_url=me.avatar_url)
+    em.set_footer(text="Tournament created!", icon_url=ctx.message.channel.guild.me.avatar_url)
     await ctx.message.channel.send(embed=em)
 
     query = "INSERT INTO tournaments (name, userid, serverid, logchannel, alertchannel) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}')".format(
-        name, ctx.message.author.id, me.guild.id, logs.id, alerts.id)
+        name, ctx.message.author.id, ctx.message.channel.guild.me.guild.id, logs.id, alerts.id)
     mycursor.execute(query)
     con.commit()
     con.close()

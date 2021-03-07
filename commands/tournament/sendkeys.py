@@ -11,7 +11,7 @@ from utils.tournaments.functions import codeSent
 @commands.cooldown(1, 30, commands.BucketType.user)
 async def sendkeys(ctx):
     me = ctx.message.channel.guild.me
-
+    await ctx.trigger_typing()
     con = await dbConnect()
     mycursor = con.cursor()
     mycursor.execute("SELECT * FROM tournaments WHERE userid = " + str(ctx.message.author.id) + " and status = 1")

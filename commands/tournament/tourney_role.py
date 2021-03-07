@@ -13,6 +13,7 @@ async def tourney_role(ctx, roleidEx=None):
         return
 
     check = roleidEx.isnumeric()
+    await ctx.trigger_typing()
     if check:
         roleid = roleidEx
     else:

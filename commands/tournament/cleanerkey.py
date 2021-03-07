@@ -12,6 +12,7 @@ async def cleanerkey(ctx, userid: int):
     if ctx.message.author.id != 266947686194741248:
         await ctx.message.channel.send("no")
         return
+    await ctx.trigger_typing()
     me = ctx.message.channel.guild.me
     tosend = client.get_user(userid)
 
