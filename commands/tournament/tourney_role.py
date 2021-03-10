@@ -9,7 +9,7 @@ from utils.tournaments.functions import roleExists
 @commands.cooldown(1, 30, commands.BucketType.user)
 async def tourney_role(ctx, roleidEx=None):
     if roleidEx is None:
-        await ctx.message.channel.send("**Usage:** ?tourney_role `@role`")
+        await ctx.message.channel.send("**Usage:** itourney_role `@role`")
         return
 
     check = roleidEx.isnumeric()

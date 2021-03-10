@@ -17,11 +17,11 @@ async def server(ctx, ip: str, port=None):
     status = server.status()
     query = server.query()
     member = ctx.message.author
-    deletmsgdebug = ''
+    messagebody = ''
     msgtime = strftime("%d/%m/%Y [%I:%M:%S %p] (%Z)", localtime())
     usermsg = "{0}".format(client.name).replace("'", "")
     motd = query.motd.replace("§b§", "").replace("§f", "").replace("§2", "").replace("§a", "").replace("§4", "")
-    em = discord.Embed(title=motd, description=deletmsgdebug, colour=0x2ecc71)
+    em = discord.Embed(title=motd, description=messagebody, colour=0x2ecc71)
 
     latency = server.ping()
 

@@ -67,6 +67,12 @@ async def sendHelpMessage(channel):
     await channel.send(embed=em)
 
 
+# escape strings before inserting into databases. avoids errors and possible security faults.
+def escape_string(string: str):
+    escaped = string.translate(str.maketrans(
+        {"-": r"\-", "]": r"\]", "\\": r"\\", "^": r"\^", "$": r"\$", "'": r"\'", "*": r"\*", ".": r"\."}))
+    return escaped
+
 async def dbConnect():
     mydb = mysql.connector.connect(
         host=os.getenv("MySQLhost"),

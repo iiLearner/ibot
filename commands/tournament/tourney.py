@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 
 from iBot import client
-from utils.functions import dbConnect, sendError
+from utils.functions import dbConnect, sendError, escape_string
 
 
 @client.command(aliases=["close_tourney"])
@@ -37,7 +37,7 @@ async def cancel_tourney(ctx):
 @commands.cooldown(1, 30, commands.BucketType.user)
 async def create_tourney(ctx, *, name=None):
     if name is None:
-        await ctx.message.channel.send("**Usage:** ?create_tourney `<name>`")
+        await ctx.message.channel.send("**Usage:** icreate_tourney `<name>`")
         return
 
     perms = ctx.message.author.guild_permissions
@@ -82,7 +82,7 @@ async def create_tourney(ctx, *, name=None):
 
     myemoji = client.get_emoji(787237116630532106)
     chemoji = client.get_emoji(788129603876421632)
-    msg = '┌─────┈{0}┈────┐\n{6}Tournament created!{7}\n└─────┈{1}┈────┘\n\nTournament has been created!\n\nTournament name: {2}\nTournament organizer: {3}\nLogs channel: {4}\nAlerts channel: {5}\n\nPlease add members to your tournament with the command `?tourney_role @role`\n\nSend private keys to all members before the tournament with the command `?sendkeys`'.format(
+    msg = '┌─────┈{0}┈────┐\n{6}Tournament created!{7}\n└─────┈{1}┈────┘\n\nTournament has been created!\n\nTournament name: {2}\nTournament organizer: {3}\nLogs channel: {4}\nAlerts channel: {5}\n\nPlease add members to your tournament with the command `itourney_role @role`\n\nSend private keys to all members before the tournament with the command `isendkeys`'.format(
         myemoji, myemoji, name, ctx.message.author.mention, logs.mention, alerts.mention, chemoji, chemoji)
     em = discord.Embed(title='', description=msg, colour=0x9b59b6)
     em.set_author(name='', icon_url=ctx.message.author.avatar_url)
@@ -90,7 +90,7 @@ async def create_tourney(ctx, *, name=None):
     await ctx.message.channel.send(embed=em)
 
     query = "INSERT INTO tournaments (name, userid, serverid, logchannel, alertchannel) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}')".format(
-        name, ctx.message.author.id, ctx.message.channel.guild.me.guild.id, logs.id, alerts.id)
+        escape_string(name), ctx.message.author.id, ctx.message.channel.guild.me.guild.id, logs.id, alerts.id)
     mycursor.execute(query)
     con.commit()
     con.close()
