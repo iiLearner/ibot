@@ -20,7 +20,7 @@ async def on_message(message):
         if 'cj' in message.content.lower() or "ibot" in message.content.lower() or "ilearner" in message.content.lower():
             if not message.author.bot:
                 await handleMessage(message)
-            elif message.author.bot and message.author.id == 787744892813312082:
+            elif message.author.bot and message.author.id == 787744892813312082 and "ilearner" not in message.content.lower():
                 await handleMessage(message)
 
         if message.mentions:
