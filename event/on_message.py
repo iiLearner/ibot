@@ -17,8 +17,11 @@ async def on_message(message):
     if not isinstance(message.channel, discord.abc.PrivateChannel):
         await handleMute(message)
         await handleReaction(message)
-        if ('cj' in message.content.lower() or "ibot" in message.content.lower() or "ilearner" in message.content.lower()) and not message.author.bot:
-            await handleMessage(message)
+        if 'cj' in message.content.lower() or "ibot" in message.content.lower() or "ilearner" in message.content.lower():
+            if not message.author.bot:
+                await handleMessage(message)
+            elif message.author.bot and message.author.id == 787744892813312082:
+                await handleMessage(message)
 
         if message.mentions:
             await handleMention(message)
