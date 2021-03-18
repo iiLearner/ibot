@@ -8,6 +8,7 @@ from reaction.reaction import getReactionTime, setReactionTime
 from strings.quotes import quotes, answers
 
 
+
 @client.event
 async def on_message(message):
     # we dont handle anything from ibot itself

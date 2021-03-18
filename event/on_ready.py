@@ -2,6 +2,7 @@ from emoji.emoji import load_emojis
 from iBot import client
 from mute.mute import loadMutes
 from roster.roster import check_rosters
+from iBot import dbl_client
 
 
 @client.event
