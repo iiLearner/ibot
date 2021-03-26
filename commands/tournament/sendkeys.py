@@ -28,10 +28,10 @@ async def sendkeys(ctx):
     progress = await ctx.message.channel.send("Sending keys...")
 
     mycursor.execute(
-        "SELECT * FROM tournaments WHERE userid = " + str(ctx.message.author.id) + " AND status = 1 LIMIT 1")
+        F'SELECT * FROM tournaments WHERE userid = {ctx.message.author.id} AND status = 1 LIMIT 1')
     tournament_info = mycursor.fetchone()
 
-    mycursor.execute("SELECT * FROM players WHERE tID = " + str(tournament_info[0]) + " and codeStatus = 1")
+    mycursor.execute(F'SELECT * FROM players WHERE tID = {tournament_info[0]} and codeStatus = 1')
     player_info = mycursor.fetchall()
 
     count = 0
@@ -68,10 +68,10 @@ async def sendkeys(ctx):
                                 member.id) + "' AND tID = '" + str(tournament_info[0]) + "'")
                         con.commit()
                         count += 1
-                        await progress.edit(content="Sent keys to: {0} | Total keys send: {1}".format(member.name, count))
+                        await progress.edit(content=f"Sent keys to: {member.name} | Total keys send: {count}")
                     except:
                         await ctx.message.channel.send(
-                            "I could not send the code to " + member.name + member.discriminator + ". Kindly ask them to change their dm settings and use `?sendkeys` again!")
+                            f"I could not send the code to {member.name} {member.discriminator}. Kindly ask them to change their dm settings and use `isendkeys` again!")
 
-    await progress.edit(content="Keys have successfully been sent to " + str(count) + " user(s)!")
+    await progress.edit(content=f"Keys have successfully been sent to {count} user(s)!")
     con.close()

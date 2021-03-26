@@ -56,7 +56,7 @@ async def create_tourney(ctx, *, name=None):
 
         con = await dbConnect()
         mycursor = con.cursor()
-        mycursor.execute("SELECT * FROM tournaments WHERE userid = " + str(ctx.message.author.id) + " and status = 1")
+        mycursor.execute(f"SELECT * FROM tournaments WHERE userid = {ctx.message.author.id} AND status = 1")
         result = mycursor.fetchone()
         if result is not None:
             await ctx.message.channel.send(
@@ -93,10 +93,9 @@ async def create_tourney(ctx, *, name=None):
         em.set_footer(text="Tournament created!", icon_url=ctx.message.channel.guild.me.avatar_url)
         await ctx.message.channel.send(embed=em)
 
-        query = "INSERT INTO tournaments (name, userid, serverid, logchannel, alertchannel) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}')".format(
-            escape_string(name), ctx.message.author.id, ctx.message.channel.guild.me.guild.id, logs.id, alerts.id)
+        query = f"INSERT INTO tournaments (name, userid, serverid, logchannel, alertchannel) VALUES ('{escape_string(name)}', '{ctx.message.author.id}', '{ctx.message.channel.guild.me.guild.id}', '{logs.id}', '{alerts.id}')"
         mycursor.execute(query)
         con.commit()
         con.close()
-    except:
-        sendError("Something went wrong... contant admin!", "", ctx)
+    except Exception as e:
+        await sendError(f"Something went wrong... contant admin!\nPlease report the following error log:`\n{str(e)}", "", ctx)

@@ -25,7 +25,7 @@ async def unmute(ctx, member: discord.Member):
     try:
         emoji = '\U0001F44D'
         await ctx.message.add_reaction(emoji)
-        await sendEmbed(f"{member.mention} has successfully been soft unmuted!", "use imute `@member` to mute again!", ctx)
+        await sendEmbed(f"{member.mention} has successfully been soft unmuted!", "use imute @member to mute again!", ctx)
     except:
         await sendError("An error occurred!", "", ctx)
 
