@@ -1,6 +1,7 @@
 from discord.ext import commands
 
 from iBot import client
+from main.config import ownerID
 from utils.functions import sendCooldown
 
 
@@ -14,3 +15,7 @@ async def on_command_error(ctx, error):
     # avoid annoying console logs
     if isinstance(error, commands.CommandNotFound):
         pass
+
+    else:
+        owner = client.get_user(ownerID)
+        await owner.send(error)

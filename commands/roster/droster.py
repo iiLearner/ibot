@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 
 from iBot import client
+from main.config import ownerID
 from roster.roster import rosterlist, del_roster
 from utils.functions import sendEmbed, sendError
 
@@ -10,8 +11,8 @@ from utils.functions import sendEmbed, sendError
 @commands.cooldown(1, 10, commands.BucketType.user)
 async def droster(ctx, roster_id: int):
     perms = ctx.message.author.guild_permissions
-    if not perms.administrator:
-        await ctx.message.channel.send("**[ERROR]** You must be a server admin in order to do this")
+    if ctx.message.author.id != ownerID and not perms.administrator:
+        await sendError("You don't have permissions to use this command!", "", ctx)
         return
 
     lost_roster_list = await rosterlist(ctx.message.channel.guild.id)
@@ -45,4 +46,11 @@ async def droster(ctx, roster_id: int):
 
 @droster.error
 async def droster_error(ctx, error):
-    await sendError("**Usage** idroster `ID`\n**Example** idroster `1`\n\n`Delete a roster from your server`", "Provide the roster ID (`irosters` to see IDs)", ctx)
+    if isinstance(error, commands.MissingRequiredArgument) or isinstance(error, commands.BadArgument) or isinstance(error, commands.ArgumentParsingError):
+        await sendError("**Usage** idroster `ID`\n**Example** idroster `1`\n\n`Delete a roster from your server`", "Provide the roster ID (`irosters` to see IDs)", ctx)
+    elif isinstance(error, commands.CheckFailure):
+        pass
+    elif isinstance(error, commands.CommandOnCooldown):
+        pass
+    else:
+        await sendError(f"Something went wrong...\nError log: {error}", "", ctx)

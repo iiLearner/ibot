@@ -5,6 +5,7 @@ from discord.ext import commands
 from discord.ext.commands import ColourConverter
 
 from iBot import client
+from main.config import ownerID
 from roster.roster import add_roster
 from utils.functions import sendEmbed, sendError
 
@@ -16,9 +17,10 @@ async def roster(ctx, channel: discord.TextChannel, role: discord.Role):
     tick_emoji = client.get_emoji(806114376297611266)
     redtick_emoji = client.get_emoji(806117763784638464)
     await ctx.trigger_typing()
-    if not perms.administrator:
-        await ctx.message.channel.send("**[ERROR]** You must be a server admin in order to create a roster")
+    if ctx.message.author.id != ownerID and not perms.administrator:
+        await sendError("You don't have permissions to use this command!", "", ctx)
         return
+
     await sendEmbed(
         "Welcome to iBot's Clan Roster Setup\n\nPlease type the header of the roster (top text)\n**Example** My Clan Members",
         "Note: Only use default font, support for different fonts will be added!", ctx)
@@ -144,8 +146,10 @@ async def roster_error(ctx, error):
         await sendError("**Usage** iroster `#channel` `@role`\n**Example** iroster `#roster` `@myrole`\n\n`Create a roster in your server`", "Make sure you mentione a channel and a role!", ctx)
     elif isinstance(error, asyncio.TimeoutError):
         await sendError("Setup timedout!", "", ctx)
+    elif isinstance(error, commands.CheckFailure):
+        pass
     else:
-        await sendError("Something wrong wrong...", "", ctx)
+        await sendError(f"Something went wrong...\nError log: {error}", "", ctx)
 
 
 

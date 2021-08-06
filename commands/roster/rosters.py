@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 
 from iBot import client
+from main.config import ownerID
 from roster.roster import rosterlist
 from utils.functions import sendError
 
@@ -10,8 +11,8 @@ from utils.functions import sendError
 @commands.cooldown(1, 10, commands.BucketType.user)
 async def rosters(ctx, ):
     perms = ctx.message.author.guild_permissions
-    if not perms.administrator:
-        await ctx.message.channel.send("**[ERROR]** You must be a server admin in order to do this")
+    if ctx.message.author.id != ownerID and not perms.administrator:
+        await sendError("You don't have permissions to use this command!", "", ctx)
         return
 
     lost_roster_list = await rosterlist(ctx.message.channel.guild.id)
@@ -28,10 +29,13 @@ async def rosters(ctx, ):
         msg = "No rosters available for this server\nUse `iroster` to create one!"
 
     em = discord.Embed(title='', description=msg, colour=0xe67e22)
-    em.set_footer(text="To delete a roster use: iroster `ID`", icon_url=ctx.message.channel.guild.icon_url)
+    em.set_footer(text="To delete a roster use: idroster `ID`", icon_url=ctx.message.channel.guild.icon_url)
     await ctx.message.channel.send(embed=em)
 
 
 @rosters.error
 async def rosters_error(ctx, error):
-    await sendError("Something went wrong...", "", ctx)
+    if isinstance(error, commands.CheckFailure):
+        pass
+    else:
+        await sendError(f"Something went wrong...\nError log: {error}", "", ctx)

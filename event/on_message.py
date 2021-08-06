@@ -16,15 +16,17 @@ async def on_message(message):
 
     if not isinstance(message.channel, discord.abc.PrivateChannel):
         await handleMute(message)
-        await handleReaction(message)
-        if 'cj' in message.content.lower() or "ibot" in message.content.lower() or "ilearner" in message.content.lower():
-            if not message.author.bot:
-                await handleMessage(message)
-            elif message.author.bot and message.author.id == 787744892813312082 and "ilearner" not in message.content.lower():
-                await handleMessage(message)
 
-        if message.mentions:
-            await handleMention(message)
+        if not await isMuted(message.author.id, message.channel.guild.id):
+            await handleReaction(message)
+            if 'cj' in message.content.lower() or "ibot" in message.content.lower() or "ilearner" in message.content.lower():
+                if not message.author.bot:
+                    await handleMessage(message)
+                elif message.author.bot and message.author.id == 787744892813312082 and "ilearner" not in message.content.lower():
+                    await handleMessage(message)
+
+            if message.mentions:
+                await handleMention(message)
 
     if isinstance(message.channel, discord.abc.PrivateChannel):
         await handleDm(message)
@@ -37,7 +39,8 @@ async def handleMute(message):
         if x.user == message.author.id and x.server == message.channel.guild.id:
             try:
                 await message.delete()
-            except:
+                return True
+            except Exception as e:
                 await delMute(message.author.id, message.channel.guild.id)
 
 
@@ -75,3 +78,8 @@ async def handleMessage(message):
     else:
         item = random.choice(quotes)
         await message.channel.send(item)
+
+
+@client.check_once
+async def check_commands(ctx):
+    return not await isMuted(ctx.message.author.id, ctx.message.channel.guild.id)
