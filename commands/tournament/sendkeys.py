@@ -61,6 +61,7 @@ async def sendkeys(ctx):
                     em.set_footer(text="Key generated!", icon_url=me.avatar_url)
                     try:
                         await member.send(embed=em)
+                        await member.send(f"You may also use `{key}` as key!")
                         await member.send(
                             "Join the support server to download the client: https://discord.gg/79kbdEDwnV")
                         mycursor.execute(
